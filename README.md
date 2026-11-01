@@ -2,44 +2,65 @@
 
 ## Deskripsi Project
 
-TaniKelola merupakan website sederhana yang dibuat untuk membantu pengguna dalam mengelola data lahan dan tanaman. Website ini memiliki tampilan yang sederhana dan responsif agar mudah digunakan melalui komputer maupun perangkat mobile.
+TaniKelola merupakan aplikasi frontend berbasis web yang dibuat untuk membantu pengguna dalam mengelola data lahan dan tanaman. Aplikasi ini memiliki tampilan sederhana dan responsif sehingga pengguna dapat mengelola informasi dengan lebih mudah.
 
-Project ini dibuat untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah Pemrograman Dasar Frontend.
+Project ini dibuat untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah Frontend.
 
-## Fitur Website
+## Tujuan Project
 
-### 1. Dashboard
-- Menampilkan jumlah total data lahan.
-- Menampilkan jumlah total data tanaman.
-- Menampilkan data terbaru.
+1. Membuat aplikasi pengelolaan data lahan dan tanaman.
+2. Menerapkan HTML5 Semantik.
+3. Menggunakan CSS Modern Responsive.
+4. Menerapkan JavaScript ES6+ dan ES Modules.
+5. Menggunakan manipulasi DOM dan Event Handling.
+6. Menerapkan validasi form pada sisi client.
 
-### 2. Manajemen Data Lahan
+## Fitur Aplikasi
+
+### 1. Login dan Logout
+- Halaman login untuk masuk ke aplikasi.
+- Validasi username dan password.
+- Fitur logout untuk mengakhiri sesi pengguna.
+
+Akun demo:
+- Username: `admin`
+- Password: `tani123`
+
+### 2. Dashboard
+- Menampilkan jumlah data lahan.
+- Menampilkan jumlah data tanaman.
+- Menampilkan ringkasan data terbaru.
+
+### 3. Data Lahan
 - Menambahkan data lahan.
 - Mengedit data lahan.
 - Menghapus data lahan.
 - Mencari data lahan.
-- Melakukan validasi input.
+- Menampilkan informasi nama, luas, lokasi, status, dan catatan lahan.
 
-### 3. Manajemen Data Tanaman
+### 4. Data Tanaman
 - Menambahkan data tanaman.
 - Mengedit data tanaman.
 - Menghapus data tanaman.
 - Mencari data tanaman.
-- Menghubungkan tanaman dengan data lahan.
-- Melakukan validasi input.
+- Menghubungkan data tanaman dengan data lahan.
 
-### 4. Penyimpanan Data
-- Menggunakan Local Storage untuk menyimpan data.
-- Data tetap tersedia setelah halaman dimuat ulang.
+### 5. Penyimpanan Data
+Data aplikasi disimpan menggunakan LocalStorage pada browser sehingga data tetap tersedia ketika halaman dimuat ulang pada browser yang sama.
 
 ## Teknologi yang Digunakan
 
 - HTML5
 - CSS3
 - JavaScript ES6+
-- JavaScript Modules (ES Modules)
+- JavaScript ES Modules
 - DOM Manipulation
-- Local Storage
+- Event Handling
+- Client-Side Form Validation
+- LocalStorage
+- SessionStorage
+
+Project dibuat menggunakan Vanilla JavaScript tanpa framework atau library eksternal.
 
 ## Struktur Folder
 
@@ -47,41 +68,64 @@ Project ini dibuat untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah 
 Frontend/
 │
 ├── index.html
-├── README.md
 │
 ├── pages/
+│   ├── login.html
 │   ├── lahan.html
 │   └── tanaman.html
 │
-└── assets/
-    ├── css/
-    │   └── style.css
-    │
-    └── js/
-        ├── main.js
-        ├── data-service.js
-        ├── form-validator.js
-        └── ui-renderer.js
+├── assets/
+│   ├── css/
+│   │   └── style.css
+│   │
+│   └── js/
+│       ├── main.js
+│       ├── data-service.js
+│       ├── form-validator.js
+│       └── ui-renderer.js
+│
+└── README.md
 ```
 
-## Pembagian Modul JavaScript
+## Cara Menjalankan Aplikasi
 
-- **main.js**: Mengatur alur utama website dan event.
-- **data-service.js**: Mengelola penyimpanan dan pengambilan data.
-- **form-validator.js**: Melakukan validasi data pada form.
-- **ui-renderer.js**: Mengatur tampilan data menggunakan DOM.
+1. Clone repository atau download project.
+2. Buka folder `Frontend` menggunakan Visual Studio Code.
+3. Jalankan file `index.html` menggunakan Live Server.
+4. Aplikasi akan mengarahkan pengguna ke halaman Login.
+5. Masukkan akun demo untuk masuk ke Dashboard.
 
-## Cara Menjalankan Project
+## Dokumentasi Tampilan
 
-1. Download atau clone repository project.
-2. Buka folder project menggunakan Visual Studio Code.
-3. Jalankan file `index.html` menggunakan ekstensi Live Server.
-4. Website TaniKelola akan terbuka melalui browser.
+Tambahkan screenshot aplikasi pada bagian ini:
 
-## Penyimpanan Data
+1. Halaman Login
+2. Halaman Dashboard
+3. Halaman Data Lahan
+4. Halaman Data Tanaman
 
-Project ini menggunakan Local Storage pada browser sebagai tempat penyimpanan data lahan dan tanaman. Data tersimpan pada browser yang digunakan.
+Simpan screenshot di folder dokumentasi, misalnya `screenshots/`, kemudian tambahkan gambar menggunakan Markdown.
 
-## Penutup
+Contoh:
 
-TaniKelola dibuat sebagai project pembelajaran untuk menerapkan HTML, CSS, dan JavaScript dalam membangun website yang memiliki fitur pengelolaan data secara interaktif.
+```markdown
+![Halaman Login](screenshots/login.png)
+```
+
+## Penyimpanan dan Batasan Aplikasi
+
+Aplikasi ini merupakan project frontend yang menggunakan LocalStorage dan SessionStorage pada browser. Data belum terhubung secara langsung dengan database MySQL atau API Backend.
+
+## Repository GitHub
+
+Link repository:
+
+https://github.com/caesarrama/UTS_TaniKelola
+
+---
+
+**TaniKelola – Sistem Manajemen Data Lahan dan Tanaman**
+
+Project Ujian Tengah Semester (UTS)  
+Program Studi S1 Teknik Informatika  
+STIKOM PGRI Banyuwangi

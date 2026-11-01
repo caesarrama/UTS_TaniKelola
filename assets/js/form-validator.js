@@ -1,40 +1,72 @@
 
-// Menampilkan pesan error pada input
 function tampilkanError(id, pesan = "") {
     const input = document.getElementById(id);
     const error = document.getElementById(id + "Error");
 
     if (input) {
-        input.classList.toggle("input-error", Boolean(pesan));
-        input.setAttribute(
-            "aria-invalid",
-            pesan ? "true" : "false"
-        );
+        input.classList.toggle("input-error", pesan !== "");
+        input.setAttribute("aria-invalid", pesan !== "" ? "true" : "false");
     }
 
     if (error) {
         error.textContent = pesan;
-        error.hidden = !pesan;
+        error.hidden = pesan === "";
     }
 }
 
-// Menghapus semua pesan error
+
 function hapusSemuaError(form) {
     if (!form) return;
 
-    form.querySelectorAll(".field-error").forEach(error => {
+    form.querySelectorAll(".field-error").forEach(function (error) {
         error.textContent = "";
         error.hidden = true;
     });
 
-    form.querySelectorAll(".input-error").forEach(input => {
+    form.querySelectorAll(".input-error").forEach(function (input) {
         input.classList.remove("input-error");
-        input.removeAttribute("aria-invalid");
+        input.setAttribute("aria-invalid", "false");
     });
 }
 
-// Validasi form lahan
+
+// ========================================
+// VALIDASI LOGIN
+// ========================================
+
+export function validasiLogin() {
+    const form = document.getElementById("loginForm");
+
+    hapusSemuaError(form);
+
+    const username = document.getElementById("usernameLogin").value.trim();
+    const password = document.getElementById("passwordLogin").value;
+
+    let valid = true;
+
+    if (username === "") {
+        tampilkanError("usernameLogin", "Username wajib diisi.");
+        valid = false;
+    }
+
+    if (password === "") {
+        tampilkanError("passwordLogin", "Password wajib diisi.");
+        valid = false;
+    }
+
+    return valid;
+}
+
+
+// ========================================
+// VALIDASI DATA LAHAN
+// ========================================
+
 export function validasiLahan() {
+    const form = document.getElementById("lahanForm");
+
+    hapusSemuaError(form);
+
     const nama = document.getElementById("namaLahan").value.trim();
     const luas = document.getElementById("luasLahan").value;
     const lokasi = document.getElementById("lokasiLahan").value.trim();
@@ -42,28 +74,22 @@ export function validasiLahan() {
 
     let valid = true;
 
-    hapusSemuaError(document.getElementById("lahanForm"));
-
-    if (!nama) {
+    if (nama === "") {
         tampilkanError("namaLahan", "Nama lahan wajib diisi.");
         valid = false;
     }
 
-    if (
-        luas === "" ||
-        !Number.isFinite(Number(luas)) ||
-        Number(luas) <= 0
-    ) {
+    if (luas === "" || Number(luas) <= 0) {
         tampilkanError("luasLahan", "Luas lahan harus lebih dari 0.");
         valid = false;
     }
 
-    if (!lokasi) {
+    if (lokasi === "") {
         tampilkanError("lokasiLahan", "Lokasi lahan wajib diisi.");
         valid = false;
     }
 
-    if (!status) {
+    if (status === "") {
         tampilkanError("statusLahan", "Status lahan wajib dipilih.");
         valid = false;
     }
@@ -71,8 +97,16 @@ export function validasiLahan() {
     return valid;
 }
 
-// Validasi form tanaman
+
+// ========================================
+// VALIDASI DATA TANAMAN
+// ========================================
+
 export function validasiTanaman(dataLahan = []) {
+    const form = document.getElementById("tanamanForm");
+
+    hapusSemuaError(form);
+
     const nama = document.getElementById("namaTanaman").value.trim();
     const jenis = document.getElementById("jenisTanaman").value;
     const lahan = document.getElementById("lahanTanaman").value;
@@ -81,29 +115,31 @@ export function validasiTanaman(dataLahan = []) {
 
     let valid = true;
 
-    hapusSemuaError(document.getElementById("tanamanForm"));
-
-    if (!nama) {
+    if (nama === "") {
         tampilkanError("namaTanaman", "Nama tanaman wajib diisi.");
         valid = false;
     }
 
-    if (!jenis) {
+    if (jenis === "") {
         tampilkanError("jenisTanaman", "Jenis tanaman wajib dipilih.");
         valid = false;
     }
 
-    if (!lahan || !dataLahan.some(item => String(item.id) === lahan)) {
-        tampilkanError("lahanTanaman", "Pilih lahan yang sudah terdaftar.");
+    const lahanDitemukan = dataLahan.some(function (item) {
+        return String(item.id) === String(lahan);
+    });
+
+    if (!lahanDitemukan) {
+        tampilkanError("lahanTanaman", "Pilih lahan yang tersedia.");
         valid = false;
     }
 
-    if (!tanggal) {
+    if (tanggal === "") {
         tampilkanError("tanggalTanam", "Tanggal tanam wajib diisi.");
         valid = false;
     }
 
-    if (!status) {
+    if (status === "") {
         tampilkanError("statusTanaman", "Status tanaman wajib dipilih.");
         valid = false;
     }

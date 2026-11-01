@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | TaniKelola</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body class="login-page">
+
+    <main class="login-container">
+
+        <!-- Bagian Ilustrasi -->
+        <section class="login-illustration">
+
+            <div class="login-brand">
+                <div class="login-logo">🌱</div>
+
+                <div>
+                    <strong>TaniKelola</strong>
+                    <small>Manajemen Pertanian</small>
+                </div>
+            </div>
+
+            <div class="login-intro">
+
+                <p class="login-kicker">
+                    SELAMAT DATANG
+                </p>
+
+                <h1>
+                    Kelola Pertanian
+                    Lebih Mudah dan Teratur
+                </h1>
+
+                <p>
+                    Catat data lahan, pantau tanaman,
+                    dan kelola aktivitas pertanian
+                    dalam satu sistem.
+                </p>
+
+                <div class="login-decoration">🌾</div>
+
+            </div>
+
+            <div class="login-footer">
+                © 2026 TaniKelola
+            </div>
+
+        </section>
+
+
+        <!-- Bagian Form Login -->
+        <section class="login-form-section">
+
+            <div class="login-card">
+
+                <div class="login-small-logo">
+                    🌿
+                </div>
+
+                <div class="login-heading">
+
+                    <h2>Login Akun</h2>
+
+                    <p>
+                        Silakan masuk untuk melanjutkan
+                        ke halaman TaniKelola.
+                    </p>
+
+                </div>
+
+
+                <form id="loginForm">
+
+                    <!-- Username -->
+                    <div class="form-group">
+
+                        <label for="usernameLogin">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            id="usernameLogin"
+                            placeholder="Masukkan username"
+                            autocomplete="username"
+                        >
+
+                        <small
+                            class="field-error"
+                            id="usernameLoginError"
+                            hidden
+                        ></small>
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label for="passwordLogin">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="passwordLogin"
+                            placeholder="Masukkan password"
+                            autocomplete="current-password"
+                        >
+
+                        <small
+                            class="field-error"
+                            id="passwordLoginError"
+                            hidden
+                        ></small>
+
+                    </div>
+
+
+                    <!-- Pesan Login -->
+                    <p
+                        id="loginMessage"
+                        class="form-message"
+                        hidden
+                        role="alert"
+                    ></p>
+
+
+                    <!-- Tombol Login -->
+                    <button
+                        type="submit"
+                        class="login-submit"
+                    >
+                        Masuk
+                    </button>
+
+                </form>
+
+
+                <div class="login-note">
+                    Sistem Manajemen Data Lahan dan Tanaman
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script type="module" src="../assets/js/main.js"></script>
+
+</body>
+</html>

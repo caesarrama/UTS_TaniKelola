@@ -1,7 +1,10 @@
+// =====================================
+// MEMBUAT ELEMEN TABEL
+// =====================================
 
-// Membuat elemen tabel
 function buatSel(teks, className = "") {
     const sel = document.createElement("td");
+
     sel.textContent = teks ?? "—";
 
     if (className) {
@@ -11,11 +14,16 @@ function buatSel(teks, className = "") {
     return sel;
 }
 
-// Membuat tombol Edit dan Hapus
+
+// =====================================
+// MEMBUAT TOMBOL EDIT DAN HAPUS
+// =====================================
+
 function buatTombolAksi(id, jenis, label) {
     const tombol = document.createElement("button");
 
     tombol.type = "button";
+
     tombol.className = jenis === "edit"
         ? "action-button action-edit"
         : "action-button action-delete";
@@ -33,7 +41,11 @@ function buatTombolAksi(id, jenis, label) {
     return tombol;
 }
 
-// Membuat baris ketika data kosong
+
+// =====================================
+// MENAMPILKAN BARIS KOSONG
+// =====================================
+
 function tampilkanBarisKosong(tbody, kolom, pesan) {
     const baris = document.createElement("tr");
     const sel = document.createElement("td");
@@ -46,26 +58,43 @@ function tampilkanBarisKosong(tbody, kolom, pesan) {
     tbody.appendChild(baris);
 }
 
-// Format angka
+
+// =====================================
+// FORMAT ANGKA
+// =====================================
+
 function formatAngka(value) {
     return Number(value).toLocaleString("id-ID");
 }
 
-// Format tanggal
+
+// =====================================
+// FORMAT TANGGAL
+// =====================================
+
 function formatTanggal(tanggal) {
     if (!tanggal) return "—";
 
     const [tahun, bulan, hari] = tanggal.split("-");
+
     return `${hari}/${bulan}/${tahun}`;
 }
 
-// Menampilkan data lahan
+
+// =====================================
+// MENAMPILKAN DATA LAHAN
+// =====================================
+
 export function renderLahan(dataLahan) {
     const tbody = document.getElementById("lahanTableBody");
+
     if (!tbody) return;
 
     const search = document.getElementById("searchLahan");
-    const kataKunci = search ? search.value.trim().toLowerCase() : "";
+
+    const kataKunci = search
+        ? search.value.trim().toLowerCase()
+        : "";
 
     const hasil = dataLahan.filter(lahan =>
         lahan.nama.toLowerCase().includes(kataKunci) ||
@@ -90,6 +119,7 @@ export function renderLahan(dataLahan) {
                 ? "Data lahan tidak ditemukan."
                 : "Belum ada data lahan."
         );
+
         return;
     }
 
@@ -111,6 +141,7 @@ export function renderLahan(dataLahan) {
         }`;
 
         badge.textContent = lahan.status;
+
         status.appendChild(badge);
 
         const aksi = document.createElement("td");
@@ -131,6 +162,7 @@ export function renderLahan(dataLahan) {
         );
 
         grup.append(tombolEdit, tombolHapus);
+
         aksi.appendChild(grup);
 
         baris.append(
@@ -146,13 +178,21 @@ export function renderLahan(dataLahan) {
     });
 }
 
-// Menampilkan data tanaman
+
+// =====================================
+// MENAMPILKAN DATA TANAMAN
+// =====================================
+
 export function renderTanaman(dataTanaman, dataLahan) {
     const tbody = document.getElementById("tanamanTableBody");
+
     if (!tbody) return;
 
     const search = document.getElementById("searchTanaman");
-    const kataKunci = search ? search.value.trim().toLowerCase() : "";
+
+    const kataKunci = search
+        ? search.value.trim().toLowerCase()
+        : "";
 
     const hasil = dataTanaman.filter(tanaman => {
         const lahan = dataLahan.find(
@@ -184,6 +224,7 @@ export function renderTanaman(dataTanaman, dataLahan) {
                 ? "Data tanaman tidak ditemukan."
                 : "Belum ada data tanaman."
         );
+
         return;
     }
 
@@ -207,18 +248,21 @@ export function renderTanaman(dataTanaman, dataLahan) {
         grup.className = "action-group";
 
         const tombolEdit = document.createElement("button");
+
         tombolEdit.type = "button";
         tombolEdit.className = "action-button action-edit";
         tombolEdit.dataset.editTanaman = tanaman.id;
         tombolEdit.textContent = "Edit";
 
         const tombolHapus = document.createElement("button");
+
         tombolHapus.type = "button";
         tombolHapus.className = "action-button action-delete";
         tombolHapus.dataset.deleteTanaman = tanaman.id;
         tombolHapus.textContent = "Hapus";
 
         grup.append(tombolEdit, tombolHapus);
+
         aksi.appendChild(grup);
 
         const status = document.createElement("td");
@@ -229,6 +273,7 @@ export function renderTanaman(dataTanaman, dataLahan) {
         }`;
 
         badge.textContent = tanaman.status;
+
         status.appendChild(badge);
 
         baris.append(
@@ -245,7 +290,11 @@ export function renderTanaman(dataTanaman, dataLahan) {
     });
 }
 
-// Menampilkan ringkasan dashboard
+
+// =====================================
+// MENAMPILKAN RINGKASAN DASHBOARD
+// =====================================
+
 export function renderDashboard(dataLahan, dataTanaman) {
     const totalLahan = document.getElementById("totalLahan");
     const totalTanaman = document.getElementById("totalTanaman");
@@ -264,7 +313,8 @@ export function renderDashboard(dataLahan, dataTanaman) {
             dataLahan.length + dataTanaman.length;
     }
 
-    // Menampilkan lima data lahan terbaru
+
+    // Data lahan terbaru
     const tbody = document.getElementById("dashboardLahan");
 
     if (tbody) {
@@ -278,6 +328,7 @@ export function renderDashboard(dataLahan, dataTanaman) {
                 3,
                 "Belum ada data lahan."
             );
+
         } else {
             terbaru.forEach(lahan => {
                 const baris = document.createElement("tr");
@@ -293,7 +344,8 @@ export function renderDashboard(dataLahan, dataTanaman) {
         }
     }
 
-    // Menampilkan lima data tanaman terbaru
+
+    // Data tanaman terbaru
     const daftarTanaman =
         document.getElementById("dashboardTanaman");
 
@@ -304,10 +356,12 @@ export function renderDashboard(dataLahan, dataTanaman) {
 
         if (terbaru.length === 0) {
             const pesan = document.createElement("p");
+
             pesan.className = "empty-cell";
             pesan.textContent = "Belum ada data tanaman.";
 
             daftarTanaman.appendChild(pesan);
+
         } else {
             terbaru.forEach(tanaman => {
                 const lahan = dataLahan.find(
@@ -315,27 +369,34 @@ export function renderDashboard(dataLahan, dataTanaman) {
                 );
 
                 const wrapper = document.createElement("div");
+
                 wrapper.className = "crop-list-item";
 
                 const emoji = document.createElement("div");
+
                 emoji.className = "crop-emoji";
                 emoji.textContent = "🌱";
 
                 const info = document.createElement("div");
+
                 info.className = "crop-info";
 
                 const nama = document.createElement("strong");
+
                 nama.textContent = tanaman.nama;
 
                 const detail = document.createElement("small");
+
                 detail.textContent =
                     lahan?.nama || "Lahan tidak tersedia";
 
                 const status = document.createElement("span");
+
                 status.className = "crop-type-tag";
                 status.textContent = tanaman.status;
 
                 info.append(nama, detail);
+
                 wrapper.append(emoji, info, status);
 
                 daftarTanaman.appendChild(wrapper);

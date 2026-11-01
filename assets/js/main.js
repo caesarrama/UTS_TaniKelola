@@ -1,23 +1,20 @@
 
-/* =====================================
-   IMPORT MODUL
-===================================== */
-
-// Modul Data Service
 import {
     ambilDataLahan,
     ambilDataTanaman,
     simpanData,
-    buatId
+    buatId,
+    simpanStatusLogin,
+    cekStatusLogin,
+    hapusStatusLogin
 } from "./data-service.js";
 
-// Modul Form Validator
 import {
     validasiLahan,
-    validasiTanaman
+    validasiTanaman,
+    validasiLogin
 } from "./form-validator.js";
 
-// Modul UI Renderer
 import {
     renderLahan,
     renderTanaman,
@@ -25,81 +22,161 @@ import {
 } from "./ui-renderer.js";
 
 
-/* =====================================
-   DATA UTAMA
-===================================== */
+// ========================================
+// 1. MENYIMPAN DATA
+// ========================================
 
-// Mengambil data dari localStorage
 let dataLahan = ambilDataLahan();
 let dataTanaman = ambilDataTanaman();
 
 
-/* =====================================
-   FUNGSI BANTU
-===================================== */
+// ========================================
+// 2. FUNGSI BANTUAN
+// ========================================
 
-// Menampilkan tanggal hari ini
 function tanggalHariIni() {
-    const elemen = document.getElementById("todayLabel");
+    const elemenTanggal = document.getElementById("todayLabel");
 
-    if (elemen) {
-        elemen.textContent = new Date().toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-    }
+    if (!elemenTanggal) return;
+
+    const tanggal = new Date();
+
+    elemenTanggal.textContent = tanggal.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
 }
 
-// Menampilkan pesan berhasil atau gagal
+
 function tampilkanPesan(id, pesan, sukses = true) {
     const elemen = document.getElementById(id);
 
     if (!elemen) return;
 
     elemen.textContent = pesan;
+    elemen.className = sukses
+        ? "form-message success"
+        : "form-message error";
+
     elemen.hidden = false;
-    elemen.style.color = sukses ? "#28794d" : "#b42318";
 }
 
-// Menutup form
+
 function tutupForm(id) {
-    const formCard = document.getElementById(id);
+    const form = document.getElementById(id);
 
-    if (formCard) {
-        formCard.hidden = true;
+    if (form) {
+        form.hidden = true;
     }
 }
 
-// Membuka form
+
 function bukaForm(id) {
-    const formCard = document.getElementById(id);
+    const form = document.getElementById(id);
 
-    if (formCard) {
-        formCard.hidden = false;
-        formCard.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+    if (form) {
+        form.hidden = false;
     }
 }
 
-// Menyimpan seluruh perubahan data
+
 function simpanSemuaData() {
     simpanData(dataLahan, dataTanaman);
 }
 
-// Memperbarui seluruh tampilan dashboard
+
 function perbaruiDashboard() {
     renderDashboard(dataLahan, dataTanaman);
 }
 
 
-/* =====================================
-   HALAMAN DATA LAHAN
-===================================== */
+// ========================================
+// 3. LOGIN DAN LOGOUT
+// ========================================
 
-// Mengosongkan form lahan
+// Mengecek status login sebelum membuka halaman aplikasi
+function periksaLogin() {
+    const halamanAplikasi = document.querySelector(".app-shell");
+
+    if (halamanAplikasi && !cekStatusLogin()) {
+        window.location.replace("pages/login.html");
+        return false;
+    }
+
+    return true;
+}
+
+
+// Mengatur proses login
+function inisialisasiLogin() {
+    const loginForm = document.getElementById("loginForm");
+
+    if (!loginForm) return;
+
+    // Jika sudah login, langsung menuju dashboard
+    if (cekStatusLogin()) {
+        window.location.replace("../index.html");
+        return;
+    }
+
+    loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!validasiLogin()) return;
+
+        const username = document
+            .getElementById("usernameLogin")
+            .value.trim();
+
+        const password = document
+            .getElementById("passwordLogin")
+            .value;
+
+        if (username === "admin" && password === "tani123") {
+            simpanStatusLogin(username);
+
+            tampilkanPesan(
+                "loginMessage",
+                "Login berhasil. Mengarahkan ke dashboard...",
+                true
+            );
+
+            window.location.replace("../index.html");
+
+        } else {
+            tampilkanPesan(
+                "loginMessage",
+                "Username atau password salah.",
+                false
+            );
+        }
+    });
+}
+
+
+// Mengatur proses logout
+function inisialisasiLogout() {
+    const tombolLogout = document.getElementById("logoutButton");
+
+    if (!tombolLogout) return;
+
+    tombolLogout.addEventListener("click", function () {
+        const yakin = confirm("Apakah kamu yakin ingin logout?");
+
+        if (yakin) {
+            hapusStatusLogin();
+            window.location.replace("pages/login.html");
+        }
+    });
+}
+
+
+// ========================================
+// 4. DATA LAHAN
+// ========================================
+
 function resetFormLahan() {
     const form = document.getElementById("lahanForm");
 
@@ -108,34 +185,25 @@ function resetFormLahan() {
     form.reset();
 
     document.getElementById("lahanId").value = "";
+    document.getElementById("lahanFormTitle").textContent = "Tambah Data Lahan";
 
-    document.getElementById("lahanFormTitle").textContent =
-        "Tambah Data Lahan";
+    const pesan = document.getElementById("lahanMessage");
 
-    const message = document.getElementById("lahanMessage");
-
-    if (message) {
-        message.hidden = true;
+    if (pesan) {
+        pesan.hidden = true;
+        pesan.textContent = "";
     }
 }
 
-// Menyimpan data lahan
+
 function simpanLahan(event) {
     event.preventDefault();
 
-    // Validasi input
-    if (!validasiLahan()) {
-        tampilkanPesan(
-            "lahanMessage",
-            "Periksa kembali kolom yang berwarna merah.",
-            false
-        );
-        return;
-    }
+    if (!validasiLahan()) return;
 
     const id = document.getElementById("lahanId").value;
 
-    const data = {
+    const lahanBaru = {
         id: id || buatId(),
         nama: document.getElementById("namaLahan").value.trim(),
         luas: Number(document.getElementById("luasLahan").value),
@@ -144,11 +212,10 @@ function simpanLahan(event) {
         catatan: document.getElementById("catatanLahan").value.trim()
     };
 
-    // Jika ID tersedia, berarti mengedit data
     if (id) {
-        dataLahan = dataLahan.map(item =>
-            item.id === id ? data : item
-        );
+        dataLahan = dataLahan.map(function (lahan) {
+            return lahan.id === id ? lahanBaru : lahan;
+        });
 
         tampilkanPesan(
             "lahanMessage",
@@ -156,103 +223,95 @@ function simpanLahan(event) {
         );
 
     } else {
-        // Jika ID belum tersedia, berarti menambah data
-        dataLahan.push(data);
+        dataLahan.push(lahanBaru);
+
+        tampilkanPesan(
+            "lahanMessage",
+            "Data lahan berhasil ditambahkan."
+        );
     }
 
     simpanSemuaData();
 
     renderLahan(dataLahan);
     perbaruiDashboard();
-    isiPilihanLahan();
 
     resetFormLahan();
     tutupForm("lahanFormCard");
 }
 
-// Mengedit data lahan
+
 function editLahan(id) {
-    const lahan = dataLahan.find(item => item.id === id);
+    const lahan = dataLahan.find(function (item) {
+        return item.id === id;
+    });
 
     if (!lahan) return;
+
+    bukaForm("lahanFormCard");
 
     document.getElementById("lahanId").value = lahan.id;
     document.getElementById("namaLahan").value = lahan.nama;
     document.getElementById("luasLahan").value = lahan.luas;
     document.getElementById("lokasiLahan").value = lahan.lokasi;
     document.getElementById("statusLahan").value = lahan.status;
-    document.getElementById("catatanLahan").value =
-        lahan.catatan || "";
+    document.getElementById("catatanLahan").value = lahan.catatan || "";
 
-    document.getElementById("lahanFormTitle").textContent =
-        "Edit Data Lahan";
+    document.getElementById("lahanFormTitle").textContent = "Edit Data Lahan";
 
-    bukaForm("lahanFormCard");
+    document.getElementById("lahanFormCard").scrollIntoView({
+        behavior: "smooth"
+    });
 }
 
-// Menghapus data lahan
+
 function hapusLahan(id) {
-    // Memeriksa apakah lahan masih digunakan tanaman
-    const terkait = dataTanaman.some(
-        tanaman => tanaman.lahanId === id
-    );
+    const tanamanTerhubung = dataTanaman.some(function (tanaman) {
+        return tanaman.lahanId === id;
+    });
 
-    if (terkait) {
-        alert(
-            "Lahan ini masih digunakan oleh data tanaman. " +
-            "Hapus atau pindahkan data tanamannya terlebih dahulu."
-        );
+    if (tanamanTerhubung) {
+        alert("Lahan tidak bisa dihapus karena masih memiliki data tanaman.");
         return;
     }
 
-    if (!confirm("Yakin ingin menghapus data lahan ini?")) {
-        return;
-    }
+    const yakin = confirm("Apakah kamu yakin ingin menghapus data lahan ini?");
 
-    dataLahan = dataLahan.filter(item => item.id !== id);
+    if (!yakin) return;
+
+    dataLahan = dataLahan.filter(function (lahan) {
+        return lahan.id !== id;
+    });
 
     simpanSemuaData();
 
     renderLahan(dataLahan);
     perbaruiDashboard();
-    isiPilihanLahan();
 }
 
 
-/* =====================================
-   HALAMAN DATA TANAMAN
-===================================== */
+// ========================================
+// 5. DATA TANAMAN
+// ========================================
 
-// Mengisi pilihan lahan pada form tanaman
-function isiPilihanLahan(idTerpilih = "") {
-    const select = document.getElementById("lahanTanaman");
+function isiPilihanLahan() {
+    const pilihanLahan = document.getElementById("lahanTanaman");
 
-    if (!select) return;
+    if (!pilihanLahan) return;
 
-    select.replaceChildren();
+    pilihanLahan.innerHTML = '<option value="">Pilih Lahan</option>';
 
-    const pilihanAwal = document.createElement("option");
-
-    pilihanAwal.value = "";
-    pilihanAwal.textContent = "Pilih lahan";
-
-    select.appendChild(pilihanAwal);
-
-    dataLahan.forEach(lahan => {
+    dataLahan.forEach(function (lahan) {
         const option = document.createElement("option");
 
         option.value = lahan.id;
         option.textContent = lahan.nama;
 
-        if (lahan.id === idTerpilih) {
-            option.selected = true;
-        }
-
-        select.appendChild(option);
+        pilihanLahan.appendChild(option);
     });
 }
 
-// Mengosongkan form tanaman
+
 function resetFormTanaman() {
     const form = document.getElementById("tanamanForm");
 
@@ -265,32 +324,23 @@ function resetFormTanaman() {
     document.getElementById("tanamanFormTitle").textContent =
         "Tambah Data Tanaman";
 
-    isiPilihanLahan();
+    const pesan = document.getElementById("tanamanMessage");
 
-    const message = document.getElementById("tanamanMessage");
-
-    if (message) {
-        message.hidden = true;
+    if (pesan) {
+        pesan.hidden = true;
+        pesan.textContent = "";
     }
 }
 
-// Menyimpan data tanaman
+
 function simpanTanaman(event) {
     event.preventDefault();
 
-    // Validasi input tanaman
-    if (!validasiTanaman(dataLahan)) {
-        tampilkanPesan(
-            "tanamanMessage",
-            "Periksa kembali kolom yang berwarna merah.",
-            false
-        );
-        return;
-    }
+    if (!validasiTanaman(dataLahan)) return;
 
     const id = document.getElementById("tanamanId").value;
 
-    const data = {
+    const tanamanBaru = {
         id: id || buatId(),
         nama: document.getElementById("namaTanaman").value.trim(),
         jenis: document.getElementById("jenisTanaman").value,
@@ -299,14 +349,23 @@ function simpanTanaman(event) {
         status: document.getElementById("statusTanaman").value
     };
 
-    // Jika ID tersedia, berarti mengedit data
     if (id) {
-        dataTanaman = dataTanaman.map(item =>
-            item.id === id ? data : item
+        dataTanaman = dataTanaman.map(function (tanaman) {
+            return tanaman.id === id ? tanamanBaru : tanaman;
+        });
+
+        tampilkanPesan(
+            "tanamanMessage",
+            "Data tanaman berhasil diperbarui."
         );
+
     } else {
-        // Jika ID belum tersedia, berarti menambah data
-        dataTanaman.push(data);
+        dataTanaman.push(tanamanBaru);
+
+        tampilkanPesan(
+            "tanamanMessage",
+            "Data tanaman berhasil ditambahkan."
+        );
     }
 
     simpanSemuaData();
@@ -318,37 +377,42 @@ function simpanTanaman(event) {
     tutupForm("tanamanFormCard");
 }
 
-// Mengedit data tanaman
+
 function editTanaman(id) {
-    const tanaman = dataTanaman.find(item => item.id === id);
+    const tanaman = dataTanaman.find(function (item) {
+        return item.id === id;
+    });
 
     if (!tanaman) return;
+
+    bukaForm("tanamanFormCard");
+
+    isiPilihanLahan();
 
     document.getElementById("tanamanId").value = tanaman.id;
     document.getElementById("namaTanaman").value = tanaman.nama;
     document.getElementById("jenisTanaman").value = tanaman.jenis;
-
-    isiPilihanLahan(tanaman.lahanId);
-
-    document.getElementById("tanggalTanam").value =
-        tanaman.tanggal;
-
-    document.getElementById("statusTanaman").value =
-        tanaman.status;
+    document.getElementById("lahanTanaman").value = tanaman.lahanId;
+    document.getElementById("tanggalTanam").value = tanaman.tanggal;
+    document.getElementById("statusTanaman").value = tanaman.status;
 
     document.getElementById("tanamanFormTitle").textContent =
         "Edit Data Tanaman";
 
-    bukaForm("tanamanFormCard");
+    document.getElementById("tanamanFormCard").scrollIntoView({
+        behavior: "smooth"
+    });
 }
 
-// Menghapus data tanaman
-function hapusTanaman(id) {
-    if (!confirm("Yakin ingin menghapus data tanaman ini?")) {
-        return;
-    }
 
-    dataTanaman = dataTanaman.filter(item => item.id !== id);
+function hapusTanaman(id) {
+    const yakin = confirm("Apakah kamu yakin ingin menghapus data tanaman ini?");
+
+    if (!yakin) return;
+
+    dataTanaman = dataTanaman.filter(function (tanaman) {
+        return tanaman.id !== id;
+    });
 
     simpanSemuaData();
 
@@ -357,146 +421,137 @@ function hapusTanaman(id) {
 }
 
 
-/* =====================================
-   EVENT DAN INISIALISASI
-===================================== */
+// ========================================
+// 6. INISIALISASI HALAMAN
+// ========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
-    // Menampilkan tanggal dan dashboard
+    // Periksa login sebelum menjalankan halaman aplikasi
+    if (!periksaLogin()) return;
+
+    // Jalankan fitur login dan logout
+    inisialisasiLogin();
+    inisialisasiLogout();
+
+    // Tampilkan tanggal
     tanggalHariIni();
-    perbaruiDashboard();
 
 
-    /* ---------------------------------
-       EVENT HALAMAN LAHAN
-    --------------------------------- */
+    // ------------------------------------
+    // DASHBOARD
+    // ------------------------------------
+
+    if (document.getElementById("totalLahan")) {
+        perbaruiDashboard();
+    }
+
+
+    // ------------------------------------
+    // HALAMAN DATA LAHAN
+    // ------------------------------------
 
     const lahanForm = document.getElementById("lahanForm");
 
     if (lahanForm) {
 
         renderLahan(dataLahan);
+        perbaruiDashboard();
 
-        // Tombol tambah lahan
-        document.getElementById("showLahanForm")
-            .addEventListener("click", () => {
+        isiPilihanLahan();
 
-                resetFormLahan();
-                bukaForm("lahanFormCard");
-
-            });
-
-        // Tombol tutup form
-        document.getElementById("closeLahanForm")
-            .addEventListener("click", () => {
-
-                tutupForm("lahanFormCard");
-
-            });
-
-        // Tombol batal
-        document.getElementById("cancelLahanForm")
-            .addEventListener("click", () => {
-
-                resetFormLahan();
-                tutupForm("lahanFormCard");
-
-            });
-
-        // Event submit form
         lahanForm.addEventListener("submit", simpanLahan);
 
-        // Event pencarian lahan
-        document.getElementById("searchLahan")
-            .addEventListener("input", () => {
-
-                renderLahan(dataLahan);
-
+        document.getElementById("showLahanForm")
+            ?.addEventListener("click", function () {
+                resetFormLahan();
+                bukaForm("lahanFormCard");
             });
 
-        // Event tombol edit dan hapus
+        document.getElementById("closeLahanForm")
+            ?.addEventListener("click", function () {
+                tutupForm("lahanFormCard");
+            });
+
+        document.getElementById("cancelLahanForm")
+            ?.addEventListener("click", function () {
+                resetFormLahan();
+                tutupForm("lahanFormCard");
+            });
+
+        document.getElementById("searchLahan")
+            ?.addEventListener("input", function () {
+                renderLahan(dataLahan);
+            });
+
         document.getElementById("lahanTableBody")
-            .addEventListener("click", event => {
+            ?.addEventListener("click", function (event) {
 
-                const edit = event.target.closest("[data-edit-lahan]");
-                const hapus = event.target.closest("[data-delete-lahan]");
+                const tombolEdit = event.target.closest("[data-edit-lahan]");
+                const tombolHapus = event.target.closest("[data-delete-lahan]");
 
-                if (edit) {
-                    editLahan(edit.dataset.editLahan);
+                if (tombolEdit) {
+                    editLahan(tombolEdit.dataset.editLahan);
                 }
 
-                if (hapus) {
-                    hapusLahan(hapus.dataset.deleteLahan);
+                if (tombolHapus) {
+                    hapusLahan(tombolHapus.dataset.deleteLahan);
                 }
-
             });
     }
 
 
-    /* ---------------------------------
-       EVENT HALAMAN TANAMAN
-    --------------------------------- */
+    // ------------------------------------
+    // HALAMAN DATA TANAMAN
+    // ------------------------------------
 
     const tanamanForm = document.getElementById("tanamanForm");
 
     if (tanamanForm) {
 
         isiPilihanLahan();
+
         renderTanaman(dataTanaman, dataLahan);
+        perbaruiDashboard();
 
-        // Tombol tambah tanaman
-        document.getElementById("showTanamanForm")
-            .addEventListener("click", () => {
-
-                resetFormTanaman();
-                bukaForm("tanamanFormCard");
-
-            });
-
-        // Tombol tutup form
-        document.getElementById("closeTanamanForm")
-            .addEventListener("click", () => {
-
-                tutupForm("tanamanFormCard");
-
-            });
-
-        // Tombol batal
-        document.getElementById("cancelTanamanForm")
-            .addEventListener("click", () => {
-
-                resetFormTanaman();
-                tutupForm("tanamanFormCard");
-
-            });
-
-        // Event submit form
         tanamanForm.addEventListener("submit", simpanTanaman);
 
-        // Event pencarian tanaman
-        document.getElementById("searchTanaman")
-            .addEventListener("input", () => {
-
-                renderTanaman(dataTanaman, dataLahan);
-
+        document.getElementById("showTanamanForm")
+            ?.addEventListener("click", function () {
+                resetFormTanaman();
+                isiPilihanLahan();
+                bukaForm("tanamanFormCard");
             });
 
-        // Event tombol edit dan hapus
+        document.getElementById("closeTanamanForm")
+            ?.addEventListener("click", function () {
+                tutupForm("tanamanFormCard");
+            });
+
+        document.getElementById("cancelTanamanForm")
+            ?.addEventListener("click", function () {
+                resetFormTanaman();
+                tutupForm("tanamanFormCard");
+            });
+
+        document.getElementById("searchTanaman")
+            ?.addEventListener("input", function () {
+                renderTanaman(dataTanaman, dataLahan);
+            });
+
         document.getElementById("tanamanTableBody")
-            .addEventListener("click", event => {
+            ?.addEventListener("click", function (event) {
 
-                const edit = event.target.closest("[data-edit-tanaman]");
-                const hapus = event.target.closest("[data-delete-tanaman]");
+                const tombolEdit = event.target.closest("[data-edit-tanaman]");
+                const tombolHapus = event.target.closest("[data-delete-tanaman]");
 
-                if (edit) {
-                    editTanaman(edit.dataset.editTanaman);
+                if (tombolEdit) {
+                    editTanaman(tombolEdit.dataset.editTanaman);
                 }
 
-                if (hapus) {
-                    hapusTanaman(hapus.dataset.deleteTanaman);
+                if (tombolHapus) {
+                    hapusTanaman(tombolHapus.dataset.deleteTanaman);
                 }
-
             });
     }
 
