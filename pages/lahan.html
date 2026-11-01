@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaniKelola | Data Lahan</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="../index.html" class="brand">
+        <span class="brand-mark">🌱</span>
+        <span>
+          <strong>TaniKelola</strong>
+          <small>Manajemen Pertanian</small>
+        </span>
+      </a>
+
+      <p class="nav-label">MENU UTAMA</p>
+      <nav class="main-nav">
+        <a class="nav-link" href="../index.html"><span>⌂</span> Dashboard</a>
+        <a class="nav-link active" href="lahan.html"><span>🌾</span> Data Lahan</a>
+        <a class="nav-link" href="tanaman.html"><span>🌿</span> Data Tanaman</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <div class="note-icon">🌱</div>
+        <strong>Kelola lebih mudah</strong>
+        <p>Catat lahan dan tanaman dalam satu sistem.</p>
+      </div>
+      <div class="sidebar-bottom">● Sistem siap digunakan</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <a href="../index.html">Dashboard</a> / <strong>Data Lahan</strong>
+        </div>
+        <div class="topbar-right">
+          <span class="today-label" id="todayLabel"></span>
+          <div class="avatar">T</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">MANAJEMEN PERTANIAN</p>
+            <h1>Data Lahan</h1>
+            <p class="subheading">Tambah, edit, hapus, dan cari data lahan.</p>
+          </div>
+          <button type="button" class="button button-primary" id="showLahanForm">
+            + Tambah Lahan
+          </button>
+        </div>
+
+        <section class="content-card form-card" id="lahanFormCard" hidden>
+          <div class="card-heading">
+            <div>
+              <h2 id="lahanFormTitle">Tambah Data Lahan</h2>
+              <p>Isi informasi lahan di bawah ini.</p>
+            </div>
+            <button type="button" class="icon-button" id="closeLahanForm" aria-label="Tutup">×</button>
+          </div>
+
+          <form id="lahanForm" novalidate>
+            <input type="hidden" id="lahanId">
+
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="namaLahan">Nama Lahan *</label>
+                <input type="text" id="namaLahan" placeholder="Contoh: Lahan Utara">
+                <small class="field-error" id="namaLahanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="luasLahan">Luas Lahan (m²) *</label>
+                <input type="number" id="luasLahan" min="1" placeholder="Contoh: 500">
+                <small class="field-error" id="luasLahanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="lokasiLahan">Lokasi *</label>
+                <input type="text" id="lokasiLahan" placeholder="Contoh: Banyuwangi">
+                <small class="field-error" id="lokasiLahanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="statusLahan">Status Lahan *</label>
+                <select id="statusLahan">
+                  <option value="">Pilih status</option>
+                  <option value="Aktif">Aktif</option>
+                  <option value="Tidak Aktif">Tidak Aktif</option>
+                </select>
+                <small class="field-error" id="statusLahanError" hidden></small>
+              </div>
+
+              <div class="form-field full-field">
+                <label for="catatanLahan">Catatan</label>
+                <textarea id="catatanLahan" rows="3" placeholder="Catatan tambahan (opsional)"></textarea>
+              </div>
+            </div>
+
+            <p class="form-message" id="lahanMessage" role="status" hidden></p>
+
+            <div class="form-actions">
+              <button type="button" class="button button-secondary" id="cancelLahanForm">Batal</button>
+              <button type="submit" class="button button-primary">Simpan Lahan</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card">
+          <div class="card-heading table-card-heading">
+            <div>
+              <h2>Daftar Lahan</h2>
+              <p id="jumlahLahan">Total 0 lahan</p>
+            </div>
+            <div class="search-box">
+              <span>⌕</span>
+              <input type="search" id="searchLahan" placeholder="Cari nama atau lokasi...">
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Nama Lahan</th>
+                  <th>Luas</th>
+                  <th>Lokasi</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="lahanTableBody">
+                <tr><td colspan="6" class="empty-cell">Belum ada data lahan.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 TaniKelola</span>
+        <span>Manajemen Data Lahan</span>
+      </footer>
+    </main>
+  </div>
+
+ <script type="module" src="../assets/js/main.js"></script>
+</html>

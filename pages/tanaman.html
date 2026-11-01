@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaniKelola | Data Tanaman</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="../index.html" class="brand">
+        <span class="brand-mark">🌱</span>
+        <span>
+          <strong>TaniKelola</strong>
+          <small>Manajemen Pertanian</small>
+        </span>
+      </a>
+
+      <p class="nav-label">MENU UTAMA</p>
+      <nav class="main-nav">
+        <a class="nav-link" href="../index.html"><span>⌂</span> Dashboard</a>
+        <a class="nav-link" href="lahan.html"><span>🌾</span> Data Lahan</a>
+        <a class="nav-link active" href="tanaman.html"><span>🌿</span> Data Tanaman</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <div class="note-icon">🌱</div>
+        <strong>Kelola lebih mudah</strong>
+        <p>Catat lahan dan tanaman dalam satu sistem.</p>
+      </div>
+      <div class="sidebar-bottom">● Sistem siap digunakan</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <a href="../index.html">Dashboard</a> / <strong>Data Tanaman</strong>
+        </div>
+        <div class="topbar-right">
+          <span class="today-label" id="todayLabel"></span>
+          <div class="avatar">T</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">MANAJEMEN PERTANIAN</p>
+            <h1>Data Tanaman</h1>
+            <p class="subheading">Kelola informasi tanaman dan lahan tempatnya ditanam.</p>
+          </div>
+          <button type="button" class="button button-primary" id="showTanamanForm">
+            + Tambah Tanaman
+          </button>
+        </div>
+
+        <section class="content-card form-card" id="tanamanFormCard" hidden>
+          <div class="card-heading">
+            <div>
+              <h2 id="tanamanFormTitle">Tambah Data Tanaman</h2>
+              <p>Isi informasi tanaman di bawah ini.</p>
+            </div>
+            <button type="button" class="icon-button" id="closeTanamanForm" aria-label="Tutup">×</button>
+          </div>
+
+          <form id="tanamanForm" novalidate>
+            <input type="hidden" id="tanamanId">
+
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="namaTanaman">Nama Tanaman *</label>
+                <input type="text" id="namaTanaman" placeholder="Contoh: Padi">
+                <small class="field-error" id="namaTanamanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="jenisTanaman">Jenis Tanaman *</label>
+                <select id="jenisTanaman">
+                  <option value="">Pilih jenis</option>
+                  <option value="Pangan">Tanaman Pangan</option>
+                  <option value="Sayuran">Sayuran</option>
+                  <option value="Buah">Buah-buahan</option>
+                  <option value="Perkebunan">Perkebunan</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+                <small class="field-error" id="jenisTanamanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="lahanTanaman">Lahan *</label>
+                <select id="lahanTanaman">
+                  <option value="">Pilih lahan</option>
+                </select>
+                <small class="field-error" id="lahanTanamanError" hidden></small>
+              </div>
+
+              <div class="form-field">
+                <label for="tanggalTanam">Tanggal Tanam *</label>
+                <input type="date" id="tanggalTanam">
+                <small class="field-error" id="tanggalTanamError" hidden></small>
+              </div>
+
+              <div class="form-field full-field">
+                <label for="statusTanaman">Status Tanaman *</label>
+                <select id="statusTanaman">
+                  <option value="">Pilih status</option>
+                  <option value="Ditanam">Ditanam</option>
+                  <option value="Perawatan">Perawatan</option>
+                  <option value="Panen">Panen</option>
+                  <option value="Selesai">Selesai</option>
+                </select>
+                <small class="field-error" id="statusTanamanError" hidden></small>
+              </div>
+            </div>
+
+            <p class="form-message" id="tanamanMessage" role="status" hidden></p>
+
+            <div class="form-actions">
+              <button type="button" class="button button-secondary" id="cancelTanamanForm">Batal</button>
+              <button type="submit" class="button button-primary">Simpan Tanaman</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card">
+          <div class="card-heading table-card-heading">
+            <div>
+              <h2>Daftar Tanaman</h2>
+              <p id="jumlahTanaman">Total 0 tanaman</p>
+            </div>
+            <div class="search-box">
+              <span>⌕</span>
+              <input type="search" id="searchTanaman" placeholder="Cari nama atau jenis...">
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Nama Tanaman</th>
+                  <th>Jenis</th>
+                  <th>Lahan</th>
+                  <th>Tanggal Tanam</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tanamanTableBody">
+                <tr><td colspan="7" class="empty-cell">Belum ada data tanaman.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 TaniKelola</span>
+        <span>Manajemen Data Tanaman</span>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>
